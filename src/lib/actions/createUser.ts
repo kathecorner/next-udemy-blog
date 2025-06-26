@@ -7,6 +7,8 @@ import bcryptjs  from 'bcryptjs'
 import { signIn } from '@/auth'
 import { redirect } from "next/navigation"
 import { ZodError } from 'zod';
+import { TestTube } from 'lucide-react';
+import test from 'node:test';
 
 type ActionState = {
     success: boolean,
@@ -27,7 +29,6 @@ function handleValidationError(error: ZodError): ActionState {
     function handleError(customErrors: Record<string, string[]>): ActionState {
         return { success: false, errors: customErrors };
 }
-
 
 export async function createUser(
     prevState: ActionState, 
