@@ -18,7 +18,7 @@ export default async function DashBoardPage() {
         <h1 className="text-2xl font-bold mb-4">
           <Button>
 
-            <Link href="/manage/posts/create" >Create New Article</Link>
+            <Link href="/manage/posts/create">Create New Article</Link>
           </Button>
         </h1>
       </div>
