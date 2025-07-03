@@ -2,6 +2,11 @@
 import PostCard from '@/components/post/PostCard';
 import { Post } from '@/lib/types/post';
 import { getPosts, searchPosts } from '@/lib/post';
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css"; // コードハイライト用のスタイル
+
 
 type SearchParams = {
   search?: string;

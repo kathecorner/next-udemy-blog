@@ -1,4 +1,4 @@
-import { getPost } from '@/lib/post';
+import { getOwnPost } from '@/lib/ownPost';
 import { notFound } from 'next/navigation';
 import {
     Card,
@@ -10,18 +10,26 @@ import { PostCardProps } from '@/lib/types/post'
 import { format } from 'date-fns';
 import { enGB, ja, Locale } from 'date-fns/locale';
 import Image from 'next/image'
+import { auth } from '@/auth';
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css"; // コードハイライト用のスタイル
 
+
 type Params = {
   params: Promise<{id: string}>
 };
 
-export default async function PostPage({params}: Params) {
+export default async function ShowPage({params}: Params) {
+    const session = await auth()
+    const userId = session?.user?.id
+    if(!session?.user?.email || !userId){
+    throw new Error('invalid request');
+    } 
+    
     const {id} = await params;
-    const post = await getPost(id);
+    const post = await getOwnPost(userId, id);
     console.log('Post ID:', id);
     
 
@@ -50,7 +58,7 @@ export default async function PostPage({params}: Params) {
             </div>
           <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
         </CardHeader>
-<CardContent>
+        <CardContent>
           <div className="prose max-w-none">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}
                                   rehypePlugins={[rehypeHighlight]}
