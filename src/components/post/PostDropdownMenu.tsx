@@ -1,3 +1,5 @@
+'use client'
+//                 URL.revokeObjectURL(imagePreview);
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,24 +10,47 @@ import { signOut } from "@/auth"
 import { Button } from "@/components/ui/button"
 import { Session } from "next-auth"
 import Link from 'next/link'
+import DeletePostDialog from "./DeletePostDialog"
+import { useState } from "react"
 
 
 export default function PostDropdownMenu({postId}: {postId: string}) {
+  //const [isOpen, setIsOpen] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false)
+
+  const handleDeleteDialogChange = (open: boolean) => {
+    setShowDeleteDialog(open)
+    if (!open) {
+      setIsDropDownOpen(false) // ドロップダウンを閉じる
+    }
+  }
+
   return (
     <div>
-        <DropdownMenu>
-<DropdownMenuTrigger className="px-2 py-1 border rounded-md">⋯</DropdownMenuTrigger>
-<DropdownMenuContent>
-<DropdownMenuItem asChild>
-<Link href={`/manage/posts/${postId}`} className="cursor-pointer">詳細</Link>
-</DropdownMenuItem>
-<DropdownMenuItem asChild>
-<Link href={`/posts/edit/${postId}`} className="cursor-pointer">編集</Link>
-</DropdownMenuItem>
-<DropdownMenuItem className="text-red-600 cursor-pointer">削除</DropdownMenuItem>
-</DropdownMenuContent>
-</DropdownMenu>
-      
+        <DropdownMenu open={isDropDownOpen} onOpenChange={setIsDropDownOpen}>
+  <DropdownMenuTrigger className="px-2 py-1 border rounded-md">⋯</DropdownMenuTrigger>
+  <DropdownMenuContent>
+  <DropdownMenuItem asChild>
+  <Link href={`/manage/posts/${postId}`} className="cursor-pointer">詳細</Link>
+  </DropdownMenuItem>
+  <DropdownMenuItem asChild>
+  <Link href={`manage/posts/${postId}/edit/`} className="cursor-pointer">編集</Link>
+  </DropdownMenuItem>
+  <DropdownMenuItem 
+    className="text-red-600 cursor-pointer"
+    onSelect={()=>{setIsDropDownOpen(false)
+      setShowDeleteDialog(true)
+    }}>削除</DropdownMenuItem>
+  </DropdownMenuContent>
+  </DropdownMenu>
+    { showDeleteDialog && (
+    <DeletePostDialog
+      postId={postId}
+      isOpen={showDeleteDialog}
+      onOpenChange={handleDeleteDialogChange}
+      />
+    )}      
     </div>
   )
 }
